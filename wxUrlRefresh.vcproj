@@ -183,6 +183,14 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\ui_fetch.cpp"
+				>
+			</File>
+			<File
+				RelativePath=".\src\ui_refresh.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\UIBASE.cpp"
 				>
 			</File>
@@ -216,6 +224,14 @@
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
+			<File
+				RelativePath=".\src\ui_fetch.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\ui_refresh.h"
+				>
+			</File>
 			<File
 				RelativePath=".\src\url_api.h"
 				>

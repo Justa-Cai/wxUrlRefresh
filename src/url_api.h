@@ -31,18 +31,25 @@ public:
 	 */
 	CURLcode Run();
 
-	wxString &GetContent();
+	wxString GetContent();
 
 	wxString GetErrorString();
 
 public:
 	/// write data call back
-	size_t write_data(void *buffer, size_t size, size_t nmemb, void *userp);
+	size_t OnWriteData(void *buffer, size_t size, size_t nmemb, void *userp);
+	virtual int OnProgress(double dltotal, double dlnow, double ultotal, double ulnow);
+	int OnHeaderData(void *ptr, size_t size, size_t nmemb);
+	void SetTimeout(int time) {m_timeout = time;}
+	void SetUseGzip(bool v = true) {m_bGzip = v;}
 
 private:
-	int m_type;
+	int m_type, m_timeout;
 	wxString m_url, m_proxy, m_content;
 	CURLcode m_ret;
+	char *m_pBuf;
+	size_t m_length;
+	bool m_bGzip, m_bGBK;
 };
 
 /*! \brief 代理数据
@@ -83,9 +90,15 @@ public:
 class CProxyParse
 {
 public:
-	int Run();
-
-	wxArrayPtrVoid &GetArray() { return m_array;}	
+	~CProxyParse()
+	{
+		m_array.Clear();
+	}
+	/*! \return 操作结果
+	 *          - -1 获取网页内容错误
+	 */
+	int Run(wxString url, int timeout=10);
+	int RunFromMem(wxString content);
 
 public:
 	wxArrayPtrVoid m_array;
