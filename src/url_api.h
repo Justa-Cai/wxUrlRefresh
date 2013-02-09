@@ -45,15 +45,50 @@ private:
 	CURLcode m_ret;
 };
 
-/*! @brief CProxyParse
+/*! \brief 代理数据
+ *
+ */
+class CProxyData
+{
+public:
+	CProxyData()
+	{
+
+	}
+
+	CProxyData(const char *strHost, const char *strPort) 
+		:host(strHost)
+		,port(strPort)
+
+	{
+
+	}
+
+	CProxyData(wxString &strHost, wxString &strPort) 
+		:host(strHost)
+		,port(strPort)
+
+	{
+
+	}
+
+public:
+	wxString host;
+	wxString port;
+};
+
+/*! \brief CProxyParse
  *  代理数据处理
  */
 class CProxyParse
 {
 public:
-
 	int Run();
-	
+
+	wxArrayPtrVoid &GetArray() { return m_array;}	
+
+public:
+	wxArrayPtrVoid m_array;
 };
 #endif //_URL_API_H_H
 

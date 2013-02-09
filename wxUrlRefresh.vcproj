@@ -40,8 +40,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;d:\work\windows\sdk\wx-2.9\include&quot;;&quot;d:\work\windows\sdk\wx-2.9\include\msvc&quot;;&quot;d:\work\windows\sdk\libcurl-7.19.3-win32-ssl-msvc\include&quot;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;__WXMSW__;WXUSINGDLL;_CRT_SECURE_NO_WARNINGS"
+				AdditionalIncludeDirectories="&quot;d:\work\windows\sdk\wx-2.9\include&quot;;&quot;d:\work\windows\sdk\wx-2.9\include\msvc&quot;;&quot;d:\work\windows\sdk\libcurl-7.29.0\include&quot;;&quot;d:\work\windows\sdk\tidy-html5\include&quot;"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;WIN32_LEAN_AND_MEAN;__WXMSW__;WXUSINGDLL;_CRT_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -62,9 +62,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="wxbase29ud.lib curllib.lib"
+				AdditionalDependencies="wxbase29ud.lib libcurl_imp.lib libtidy.dll.lib"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="d:\work\windows\sdk\wx-2.9\lib\vc_dll;d:\work\windows\sdk\libcurl-7.19.3-win32-ssl-msvc\lib\Debug"
+				AdditionalLibraryDirectories="&quot;d:\work\windows\sdk\wx-2.9\lib\vc_dll&quot;;&quot;d:\work\windows\sdk\libcurl-7.29.0\lib\debug&quot;;&quot;d:\work\windows\sdk\tidy-html5\lib\debug&quot;"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"

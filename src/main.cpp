@@ -3,7 +3,6 @@
 
 #include "wx/wx.h"
 #include "UIBASE.h"
-#include "curl/curl.h"
 #include "url_api.h"
 
 
@@ -22,7 +21,23 @@ public:
 	CMyFrame( wxWindow* parent=NULL )
 		:CMyFrameBase(parent)
 	{
+		wxLogWindow *pLogWin = new wxLogWindow(this, "LOG");
+		wxLog::SetActiveTarget(pLogWin);
 
+		CProxyParse parse;
+		if (parse.Run()<0)
+			m_textCtrlInfo->AppendText("parse fail\n");
+		else 
+		{
+			m_textCtrlInfo->AppendText("parse succ\n");
+			wxString str;
+			for (wxUint32 i=0; i<parse.m_array.GetCount(); i++) 
+			{
+				CProxyData *pData = (CProxyData *)parse.m_array[i];
+				str += wxString::Format("%s:%s\n", pData->host, pData->port);
+			}
+			m_textCtrlInfo->AppendText(str);
+		}
 
 
 #if 0
