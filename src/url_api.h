@@ -103,6 +103,53 @@ public:
 public:
 	wxArrayPtrVoid m_array;
 };
+
+WX_DECLARE_HASH_MAP( wxString, CProxyData*, wxStringHash, wxStringEqual, CProxyDataHash);
+/*! \brief CProxyDataConfig
+ *  代理数据 存储
+ */
+class CProxyDataConfig
+{
+public:
+	~CProxyDataConfig();
+
+	static CProxyDataConfig *GetHandle();
+
+public:
+	/*! \brief 从文件中加载代理数据
+	 */
+	bool Load();
+
+	/*! \brief 保存当前的配置
+	 */
+	bool Save();
+
+	/*! \brief 增加代理数据 
+	 *
+	 *  \note 处理代理唯一性
+	 */
+	bool Add(CProxyData *pData);
+
+	/*! \brief 移除某个代理数据
+	 */
+	bool Remove(CProxyData *pData);
+
+	bool Remove(wxString key);
+
+
+	/*! \brief 获取代理数据 总量
+	 *
+	 */
+	int GetCount();
+
+	/*! \brief 获取数据库中 某个代理网址
+	 */
+	wxString GetProxyHttp(int pos);
+public:
+	CProxyDataHash m_hash;
+	wxMutex m_mutext;
+	wxString m_path;
+};
 #endif //_URL_API_H_H
 
 

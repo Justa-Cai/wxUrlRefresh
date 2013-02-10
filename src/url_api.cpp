@@ -421,8 +421,164 @@ int CProxyParse::RunFromMem( wxString content )
 	}
 	else
 	{
-		printf("shit");
+		wxLogMessage("shit");
 		return -2;
 	}
 	return 0;
+}
+
+/////////////////////////////////
+// CProxyDataConfig
+/////////////////////////////////
+CProxyDataConfig * CProxyDataConfig::GetHandle()
+{
+	static CProxyDataConfig *config = NULL;
+
+	if (!config)
+	{
+		config = new CProxyDataConfig;
+		config->m_path = wxGetCwd() + "/data/";
+		if (!wxDirExists(config->m_path))
+			wxMkdir(config->m_path);
+		config->m_path += "proxy_data.xml";
+		config->Load();
+	}
+
+	return config;
+}
+
+
+bool CProxyDataConfig::Load()
+{
+	if (!wxFileExists(m_path))
+		return false;
+
+	TiXmlDocument doc(m_path);
+
+	if (doc.LoadFile()) 
+	{
+		TiXmlElement *pRoot = doc.RootElement();
+		TiXmlElement *pChild = pRoot->FirstChildElement();
+		while(pChild) 
+		{
+			CProxyData data;
+			data.host = pChild->Attribute("host");
+			data.port = pChild->Attribute("port");
+			Add(&data);
+			pChild = pChild->NextSiblingElement();
+		}
+		return true;
+	}
+
+	return false;
+}
+
+bool CProxyDataConfig::Save()
+{
+	wxMutexLocker locker(m_mutext);
+	CProxyDataHash::iterator it;
+
+	TiXmlDocument doc;
+	TiXmlElement *pRoot = new TiXmlElement("CONFIG");
+	doc.LinkEndChild(pRoot);
+
+	for( it = m_hash.begin(); it != m_hash.end(); ++it )
+	{
+		wxString key = it->first;
+		CProxyData *pData = it->second;
+		TiXmlElement *pElement = new TiXmlElement("PROXY");
+		pElement->SetAttribute("proxy_url", key);
+		pElement->SetAttribute("host", pData->host);
+		pElement->SetAttribute("port", pData->port);
+		pRoot->LinkEndChild(pElement);
+	}
+
+	doc.SaveFile(m_path);
+	return true;
+}
+
+bool CProxyDataConfig::Add( CProxyData *pData )
+{
+	wxMutexLocker locker(m_mutext);
+	CProxyData *pTmpData;
+	wxString key;
+	key.Printf("http://%s:%s", pData->host, pData->port);
+
+	pTmpData = m_hash[key];
+	if (pTmpData)
+		return false;
+
+	pTmpData = new CProxyData;
+	*pTmpData = *pData;
+	m_hash[key] = pTmpData;
+	return true;
+}
+
+bool CProxyDataConfig::Remove( CProxyData *pData )
+{
+	wxMutexLocker locker(m_mutext);
+	CProxyData *pTmpData;
+	wxString key;
+	key.Printf("http://%s:%s", pData->host, pData->port);
+
+	pTmpData = m_hash[key];
+	if (!pTmpData)
+		return false;
+
+	m_hash.erase(key);
+	delete pTmpData;
+	return true;
+}
+
+CProxyDataConfig::~CProxyDataConfig()
+{
+	wxMutexLocker locker(m_mutext);
+	CProxyDataHash::iterator it;
+	for( it = m_hash.begin(); it != m_hash.end(); ++it )
+	{
+		wxString key = it->first;
+		CProxyData *pData = it->second;
+
+		delete pData;
+	}
+
+	m_hash.clear();
+}
+
+int CProxyDataConfig::GetCount()
+{
+	wxMutexLocker locker(m_mutext);
+	return m_hash.size();
+}
+
+wxString CProxyDataConfig::GetProxyHttp( int pos )
+{
+	wxMutexLocker locker(m_mutext);
+	CProxyDataHash::iterator it;
+	int i=0;
+
+	if (pos>GetCount())
+		return wxEmptyString;
+
+	for( it = m_hash.begin(); it != m_hash.end(); ++it )
+	{
+		wxString key = it->first;
+		if (i++==pos)
+			return key;
+	}
+	return wxEmptyString;
+}
+
+bool CProxyDataConfig::Remove( wxString key )
+{
+	wxMutexLocker locker(m_mutext);
+	CProxyData *pTmpData;
+
+	pTmpData = m_hash[key];
+	if (!pTmpData)
+		return false;
+
+	m_hash.erase(key);
+	delete pTmpData;
+	return true;
 }

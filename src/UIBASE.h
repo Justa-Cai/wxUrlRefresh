@@ -11,18 +11,19 @@
 #include <wx/artprov.h>
 #include <wx/xrc/xmlres.h>
 #include <wx/string.h>
-#include <wx/textctrl.h>
-#include <wx/gdicmn.h>
-#include <wx/font.h>
-#include <wx/colour.h>
-#include <wx/settings.h>
-#include <wx/button.h>
-#include <wx/sizer.h>
 #include <wx/bitmap.h>
 #include <wx/image.h>
 #include <wx/icon.h>
 #include <wx/menu.h>
+#include <wx/gdicmn.h>
+#include <wx/font.h>
+#include <wx/colour.h>
+#include <wx/settings.h>
+#include <wx/hyperlink.h>
+#include <wx/textctrl.h>
+#include <wx/sizer.h>
 #include <wx/frame.h>
+#include <wx/button.h>
 #include <wx/stattext.h>
 #include <wx/dialog.h>
 #include <wx/checkbox.h>
@@ -41,21 +42,20 @@ class CMyFrameBase : public wxFrame
 	private:
 	
 	protected:
-		wxTextCtrl* m_textCtrlInfo;
-		wxButton* m_buttonDo;
 		wxMenuBar* m_menubar1;
 		wxMenu* m_menu1;
+		wxHyperlinkCtrl* m_hyperlink1;
+		wxTextCtrl* m_textCtrl8;
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnClose( wxCloseEvent& event ) { event.Skip(); }
-		virtual void OnButtonClick( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnMenuRefresh( wxCommandEvent& event ) { event.Skip(); }
 		virtual void OnMenuFetch( wxCommandEvent& event ) { event.Skip(); }
 		
 	
 	public:
 		
-		CMyFrameBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxEmptyString, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 640,480 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
+		CMyFrameBase( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = wxT("wxUrlRefresh"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 640,480 ), long style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL );
 		
 		~CMyFrameBase();
 	
@@ -94,15 +94,17 @@ class CDialogProxyRefreshBase : public wxDialog
 	
 	protected:
 		wxButton* m_btnRefresh;
-		wxStaticText* m_staticTextInfo;
+		wxTextCtrl* m_textCtrlHttp;
 		wxCheckBox* m_checkBoxProxy;
 		wxStaticText* m_staticText6;
 		wxTextCtrl* m_textCtrlThread;
 		wxStaticText* m_staticText61;
 		wxTextCtrl* m_textCtrlRefreshNum;
+		wxStaticText* m_staticTextInfo;
 		wxTextCtrl* m_textCtrlInfo;
 		
 		// Virtual event handlers, overide them in your derived class
+		virtual void OnIdle( wxIdleEvent& event ) { event.Skip(); }
 		virtual void OnBtnRefreshClick( wxCommandEvent& event ) { event.Skip(); }
 		
 	

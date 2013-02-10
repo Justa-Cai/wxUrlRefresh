@@ -13,17 +13,6 @@ CMyFrameBase::CMyFrameBase( wxWindow* parent, wxWindowID id, const wxString& tit
 {
 	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
 	
-	wxBoxSizer* bSizer1;
-	bSizer1 = new wxBoxSizer( wxVERTICAL );
-	
-	m_textCtrlInfo = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_CHARWRAP|wxTE_MULTILINE|wxTE_WORDWRAP );
-	bSizer1->Add( m_textCtrlInfo, 1, wxALL|wxEXPAND, 5 );
-	
-	m_buttonDo = new wxButton( this, wxID_ANY, wxT("Do"), wxDefaultPosition, wxDefaultSize, 0 );
-	bSizer1->Add( m_buttonDo, 0, wxALL|wxALIGN_RIGHT, 5 );
-	
-	this->SetSizer( bSizer1 );
-	this->Layout();
 	m_menubar1 = new wxMenuBar( 0 );
 	m_menu1 = new wxMenu();
 	wxMenuItem* m_menuItemRefresh;
@@ -38,12 +27,22 @@ CMyFrameBase::CMyFrameBase( wxWindow* parent, wxWindowID id, const wxString& tit
 	
 	this->SetMenuBar( m_menubar1 );
 	
+	wxBoxSizer* bSizer9;
+	bSizer9 = new wxBoxSizer( wxVERTICAL );
+	
+	m_hyperlink1 = new wxHyperlinkCtrl( this, wxID_ANY, wxT("Author: http://weibo.com/caicry"), wxT("http://weibo.com/caicry"), wxDefaultPosition, wxDefaultSize, wxHL_DEFAULT_STYLE );
+	bSizer9->Add( m_hyperlink1, 0, wxALL|wxALIGN_CENTER_HORIZONTAL, 5 );
+	
+	m_textCtrl8 = new wxTextCtrl( this, wxID_ANY, wxT("\n\n\n\n\n\n\n\n\n\n\nAuthor: http://weibo.com/caicry \nCreate: 2013.02.10 \nPS:   Happy Chinese New Year!"), wxDefaultPosition, wxDefaultSize, wxTE_CENTRE|wxTE_MULTILINE|wxTE_READONLY );
+	bSizer9->Add( m_textCtrl8, 1, wxALL|wxEXPAND, 5 );
+	
+	this->SetSizer( bSizer9 );
+	this->Layout();
 	
 	this->Centre( wxBOTH );
 	
 	// Connect Events
 	this->Connect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( CMyFrameBase::OnClose ) );
-	m_buttonDo->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CMyFrameBase::OnButtonClick ), NULL, this );
 	this->Connect( m_menuItemRefresh->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( CMyFrameBase::OnMenuRefresh ) );
 	this->Connect( m_menuItemFetch->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( CMyFrameBase::OnMenuFetch ) );
 }
@@ -52,7 +51,6 @@ CMyFrameBase::~CMyFrameBase()
 {
 	// Disconnect Events
 	this->Disconnect( wxEVT_CLOSE_WINDOW, wxCloseEventHandler( CMyFrameBase::OnClose ) );
-	m_buttonDo->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CMyFrameBase::OnButtonClick ), NULL, this );
 	this->Disconnect( wxID_MenuItemRefresh, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( CMyFrameBase::OnMenuRefresh ) );
 	this->Disconnect( wxID_MenuItemFetch, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( CMyFrameBase::OnMenuFetch ) );
 	
@@ -111,9 +109,8 @@ CDialogProxyRefreshBase::CDialogProxyRefreshBase( wxWindow* parent, wxWindowID i
 	m_btnRefresh = new wxButton( this, wxID_ANY, wxT("Refresh"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer3->Add( m_btnRefresh, 0, wxALL, 5 );
 	
-	m_staticTextInfo = new wxStaticText( this, wxID_ANY, wxT("Info:"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticTextInfo->Wrap( -1 );
-	bSizer3->Add( m_staticTextInfo, 1, wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL, 5 );
+	m_textCtrlHttp = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	bSizer3->Add( m_textCtrlHttp, 1, wxALL, 5 );
 	
 	bSizer2->Add( bSizer3, 0, wxEXPAND, 5 );
 	
@@ -148,6 +145,10 @@ CDialogProxyRefreshBase::CDialogProxyRefreshBase( wxWindow* parent, wxWindowID i
 	m_textCtrlRefreshNum = new wxTextCtrl( this, wxID_ANY, wxT("100"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer12->Add( m_textCtrlRefreshNum, 0, wxALL, 5 );
 	
+	m_staticTextInfo = new wxStaticText( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticTextInfo->Wrap( -1 );
+	bSizer12->Add( m_staticTextInfo, 0, wxALL, 5 );
+	
 	bSizer2->Add( bSizer12, 0, wxEXPAND, 5 );
 	
 	m_textCtrlInfo = new wxTextCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxTE_CHARWRAP|wxTE_MULTILINE|wxTE_READONLY|wxTE_WORDWRAP );
@@ -159,12 +160,14 @@ CDialogProxyRefreshBase::CDialogProxyRefreshBase( wxWindow* parent, wxWindowID i
 	this->Centre( wxBOTH );
 	
 	// Connect Events
+	this->Connect( wxEVT_IDLE, wxIdleEventHandler( CDialogProxyRefreshBase::OnIdle ) );
 	m_btnRefresh->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CDialogProxyRefreshBase::OnBtnRefreshClick ), NULL, this );
 }
 
 CDialogProxyRefreshBase::~CDialogProxyRefreshBase()
 {
 	// Disconnect Events
+	this->Disconnect( wxEVT_IDLE, wxIdleEventHandler( CDialogProxyRefreshBase::OnIdle ) );
 	m_btnRefresh->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CDialogProxyRefreshBase::OnBtnRefreshClick ), NULL, this );
 	
 }
